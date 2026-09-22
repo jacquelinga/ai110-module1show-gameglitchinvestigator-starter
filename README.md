@@ -25,19 +25,19 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- Guessing numbers game 1-100, game gives higher and lower hints.
+- I found that the hints were backwards and the game didnt start new when you clicked new game. 
+- I fixed the hints and the score reset when starting a new game.
 
 ## 📸 Demo Walkthrough
 
 Describe your fixed game in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. User enters guess
+2. If user guesses below secret number hame tells the useer to go higher and vise versa.
+3. The score updates as the user makes guesses.
+4. If you guess correctly a winning message shows up.
+5. clicking new game starts a new game and resets the code.
 
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
