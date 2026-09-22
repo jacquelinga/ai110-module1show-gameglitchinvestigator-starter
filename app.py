@@ -1,5 +1,7 @@
 import random
 import streamlit as st
+# FIX: Used AI to identify the shared game logic import.
+from logic_utils import check_guess, parse_guess
 
 def get_range_for_difficulty(difficulty: str):
     if difficulty == "Easy":
@@ -11,40 +13,22 @@ def get_range_for_difficulty(difficulty: str):
     return 1, 100
 
 
-def parse_guess(raw: str):
-    if raw is None:
-        return False, None, "Enter a guess."
+def update_score(current_score: int, outcome: str, attempt_number: int):
+    if outcome == "Win":
+        points = 100 - 10 * (attempt_number + 1)
+        if points < 10:
+            points = 10
+        return current_score + points
 
-    if raw == "":
-        return False, None, "Enter a guess."
+    if outcome == "Too High":
+        if attempt_number % 2 == 0:
+            return current_score + 5
+        return current_score - 5
 
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
+    if outcome == "Too Low":
+        return current_score - 5
 
-    return True, value, None
-
-
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
-
-    try:
-        if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
-        else:
-            return "Too Low", "📉 Go LOWER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
+    return current_score
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
@@ -132,7 +116,10 @@ with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
+    #FIXME: The new game button should reset the attempts to 1, not 0. Otherwise, the player will have one less attempt than intended.
     st.session_state.attempts = 0
+    # FIX: Used AI to catch the score reset needed for a new game.
+    st.session_state.score = 0
     st.session_state.secret = random.randint(1, 100)
     st.success("New game started.")
     st.rerun()
@@ -155,10 +142,7 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
-        if st.session_state.attempts % 2 == 0:
-            secret = str(st.session_state.secret)
-        else:
-            secret = st.session_state.secret
+        secret = st.session_state.secret
 
         outcome, message = check_guess(guess_int, secret)
 
